@@ -1,4 +1,4 @@
-import wollok.game.*
+import wollok.game.* //comentario Fer
 
 object pepita {
 
