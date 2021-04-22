@@ -1,5 +1,5 @@
 import wollok.game.* //comentario Fer
-
+			//lala
 object pepita {
 
 	method position() {
