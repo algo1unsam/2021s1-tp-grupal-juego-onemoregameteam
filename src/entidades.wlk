@@ -1,14 +1,47 @@
 import wollok.game.* //comentario Fer
-			//lala
-object pepita {
+import equipamento.*
+import niveles.*
 
-	method position() {
-		return game.center()
-	}
-
+class Character {
+	var vida
+	var stamina
+	var arma
+	var fuerza
+	var agilidad
+		
+	var property imagen
+	var property position
+	
 	method image() {
-		return "pepita.png"
+		return imagen
 	}
+	
+	method atacar(enemigo) {
+		
+	}
+	
+	method defender(){
+		
+	}
+	
+	
+}
 
+object mainCharacter inherits Character {
+	
+	var hechizo
+	var oro
+	
+	method descansar() {
+		
+	}
+	
+	method huir() {
+		
+	}
+	
+	method magia() {
+		
+	}
 }
 

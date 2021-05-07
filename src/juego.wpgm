@@ -1,6 +1,7 @@
 import wollok.game.*
 import entidades.*
 import equipamento.*
+import niveles.*
 
 program juego {
 

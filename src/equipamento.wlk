@@ -1,14 +1,18 @@
 import wollok.game.* //comentario Fer
-			//lala
-object pepita {
 
-	method position() {
-		return game.center()
-	}
-
-	method image() {
-		return "pepita.png"
-	}
-
+class arma {
+	var property danio
+	var property nombre
 }
 
+class armadura {
+	var property reduccionDanio
+	var property nombre
+}
+
+class libroHechizo {
+	var property danio
+	var property defensa
+	var property curacion
+	var property nombre
+}
