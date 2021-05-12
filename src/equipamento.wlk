@@ -1,16 +1,16 @@
 import wollok.game.* //comentario Fer
-
-class arma {
+import niveles.*
+class Arma {
 	var property danio
 	var property nombre
 }
 
-class armadura {
+class Armadura {
 	var property reduccionDanio
 	var property nombre
 }
 
-class libroHechizo {
+class LibroHechizo {
 	var property danio
 	var property defensa
 	var property curacion

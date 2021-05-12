@@ -11,13 +11,12 @@ class Character {
 		
 	var property imagen
 	var property position
-	
 	method image() {
 		return imagen
 	}
 	
-	method atacar(enemigo) {
-		
+	method atacar(enemigo){
+		enemigo.recivirDano()
 	}
 	
 	method defender(){
@@ -27,10 +26,15 @@ class Character {
 	
 }
 
-object mainCharacter inherits Character {
+object mainCharacter inherits Character(position =  game.at(0,1), vida = 100) {
 	
 	var hechizo
 	var oro
+	var property enemigo
+	
+	override method image(){
+		return "assets/knight2.png"
+	}
 	
 	method descansar() {
 		
@@ -45,3 +49,28 @@ object mainCharacter inherits Character {
 	}
 }
 
+class Enemy inherits Character{
+	
+	method visual(){
+		game.addVisual(self)
+	}
+	
+	method recivirDano(){	
+		if(vida <= 0) game.removeVisual(self) else vida -= 20
+	}
+	
+	method estado(){
+		if(vida < 0) spawn.generar()
+	}
+	
+}
+
+
+
+object spawn{
+	method generar(){
+		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = "assets/goblin.gif")
+		mainCharacter.enemigo(enemigo1)
+		enemigo1.visual()
+	}
+}
