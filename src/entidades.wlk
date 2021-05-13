@@ -55,6 +55,7 @@ class Enemy inherits Character{
 		game.addVisual(self)
 	}
 	
+	//el dano de -20 esta para las pruebas
 	method recivirDano(){	
 		if(vida <= 0) game.removeVisual(self) else vida -= 20
 	}
@@ -68,8 +69,9 @@ class Enemy inherits Character{
 
 
 object spawn{
+	const bestias = ["assets/goblin.gif", "assets/skeleton.png", "assets/demon.png"]
 	method generar(){
-		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = "assets/goblin.gif")
+		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = bestias.anyOne())
 		mainCharacter.enemigo(enemigo1)
 		enemigo1.visual()
 	}
