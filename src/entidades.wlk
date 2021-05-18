@@ -59,7 +59,6 @@ class Enemy inherits Character{
 	method recivirDano(){	
 		if(vida <= 0) game.removeVisual(self) 
 		else { 	
-			game.removeVisual(self)
 		 	const a = self.imagen()
 		 	self.imagen(self.cambio(self.imagen()))
 		 	game.schedule(1000,  {self.imagen(a)})
