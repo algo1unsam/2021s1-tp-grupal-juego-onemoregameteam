@@ -57,7 +57,18 @@ class Enemy inherits Character{
 	
 	//el dano de -20 esta para las pruebas
 	method recivirDano(){	
-		if(vida <= 0) game.removeVisual(self) else vida -= 20
+		if(vida <= 0) game.removeVisual(self) 
+		else { 	
+			game.removeVisual(self)
+		 	const a = self.imagen()
+		 	self.imagen(self.cambio(self.imagen()))
+		 	game.schedule(1000,  {self.imagen(a)})
+		 	vida -= 20	}
+	}
+	method cambio(imag){
+		if(imag == "assets/skeleton.png") return "assets/skeletonRojo.png"
+		else if(imag == "assets/demon.png") return "assets/demonRojo.png"
+		else return "assets/goblinRojo.png"
 	}
 	
 	method estado(){
