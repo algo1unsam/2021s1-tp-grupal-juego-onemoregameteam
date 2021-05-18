@@ -14,13 +14,14 @@ object nivel1{
 
 object mainMenu{
 	var property selected
-	
+	var backgroundMusic = game.sound("sounds/introOST.mp3")
 	method iniciar() {
 		game.clear()
 		//game.cellSize()
 		game.addVisual(menuBackground)
 		game.addVisual(start)
 		game.addVisual(quit)
+		self.introMusic()
 		config.configMainMenu()
 	}
 	
@@ -36,6 +37,10 @@ object mainMenu{
 	}
 	method action(){
 		selected.action()
+	}
+	
+	method introMusic(){
+		game.schedule(100,{ backgroundMusic.play() })
 	}
 }
 
