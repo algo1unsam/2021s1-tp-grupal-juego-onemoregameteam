@@ -3,48 +3,81 @@ import wollok.game.*
 import equipamento.*
 import mainMenu.*
 
-class nivel {
+class Nivel {
 	method iniciar() {
 		game.clear()
 		game.addVisual(mainCharacter)
 		self.spawnManager()
 		config.nivel1()
 	}
+	method spawnManager() {
+	}
 	
 	
 }
 
-object nivel1 inherits nivel{
+object nivel1 inherits Nivel{
 	const waveLenght = 4
 	var cont = waveLenght
 	
-	method spawnManager(){
+	override method spawnManager(){
 		if(cont > 0){
 			newSpawn.generar(1, self)
 			cont -= 1
-		} 
+		}else{
+			pantallaUpgrade.iniciar()
+		}
 	}
 }
 
-object nivel2 inherits nivel{
+object nivel2 inherits Nivel{
 	const waveLenght = 5
 	var cont = waveLenght
 	
-	method spawnManager(){
+	override method spawnManager(){
 		if(cont > 0){
-			newSpawn.generar(1, self)
+			newSpawn.generar(2, self)
 			cont -= 1
+		}else{
+			pantallaUpgrade.nivel(3)
+			pantallaUpgrade.iniciar()
 		} 
 	}
 }
 
-object pantallaUpgrade {
-	method iniciar() {
-		game.clear()
-		game.addVisual("EL FONDO PARA ESTA COSA")
-		game.addVisual("CARTEL DEL LOOT")
-		//Y ASI CON BOTON PARA CONTINUAR Y BOTON PARA MENU PRINCIPAL
+object nivel3 inherits Nivel{
+	const waveLenght = 6
+	var cont = waveLenght
+	
+	override method spawnManager(){
+		if(cont > 0){
+			newSpawn.generar(3, self)
+			cont -= 1
+		}
 	}
+}
+object pantallaUpgrade {
+	var property nivel = 2
+	method iniciar() {
+		upgradeBackGround.nextlvl(nivel)
+		game.clear()
+		game.addVisual(upgradeBackGround)
+		//Hay que configurar los botones, por ahora el siguente es la felcha derecha
+		//Y ASI CON BOTON PARA CONTINUAR Y BOTON PARA MENU PRINCIPAL
+		config.next()
+	}
+	
+	method accion(){
+		if(nivel == 2){
+			nivel2.iniciar()
+			mainCharacter.equipUpgrade(2)
+		}else{
+			nivel3.iniciar()
+			mainCharacter.equipUpgrade(3)
+		}
+		
+	}
+	
 }
 object mainMenu {
 
@@ -94,6 +127,10 @@ object config {
 	method nivel1() {
 		keyboard.a().onPressDo({ mainCharacter.atacar(mainCharacter.enemigo())})
 		keyboard.n().onPressDo({ mainCharacter.enemigo().estado()})
+	}
+	
+	method next(){
+		keyboard.right().onPressDo({pantallaUpgrade.accion()})
 	}
 
 }

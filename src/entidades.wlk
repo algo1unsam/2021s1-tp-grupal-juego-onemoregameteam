@@ -51,12 +51,20 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 100) {
 
 	var hechizo
 	var oro
+	var image = "assets/knight1.png"
 	var property enemigo
 
 	override method image() {
-		return "assets/knight2.png"
+		return image
 	}
 
+	method equipUpgrade(_level){
+		if(_level == 2){
+			image = "assets/knight2.png"
+		}else{
+			image = "assets/knight3.png"
+		}
+	}
 	method descansar() {
 	}
 
@@ -119,6 +127,17 @@ object newSpawn {
 		enemigo.visual() 
 	}
 
+}
+
+object upgradeBackGround{
+	var property image = "assets/nextlvl1.png"
+	var property position = game.at(0, 0)
+	
+	method nextlvl(_nivel){
+		if(_nivel == 3){
+			image = "assets/nextlvl2.png" 
+		}
+	}
 }
 
 object menuBackground {
