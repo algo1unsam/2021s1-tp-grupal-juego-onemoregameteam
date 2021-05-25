@@ -1,5 +1,6 @@
 import wollok.game.* //comentario Fer
 import niveles.*
+
 class Arma {
 	var property danio
 	var property nombre

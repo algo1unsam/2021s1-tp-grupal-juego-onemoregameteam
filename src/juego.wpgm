@@ -8,12 +8,8 @@ program juego {
 	game.height(17)
 	game.width(30)
 	game.boardGround("assets/dungeon1.gif")
-	
 	mainMenu.iniciar()
-	//nivel1.iniciar()
-
-	//game.showAttributes(knight) //Debug
-	//game.showAttributes(goblin)
-
+		// game.showAttributes(knight) //Debug
+		// game.showAttributes(goblin)
 	game.start()
 }

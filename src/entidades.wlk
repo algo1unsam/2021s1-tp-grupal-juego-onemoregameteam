@@ -3,128 +3,168 @@ import equipamento.*
 import niveles.*
 
 class Character {
+
 	var vida
 	var stamina
 	var arma
 	var fuerza
 	var agilidad
-		
+	
+	// status list
+	// 0 = dead
+	// 1 = idle
+	// 2 = being attacked
+	var property status = 1
 	var property imagen
 	var property position
+	var property nivel
+
 	method image() {
 		return imagen
 	}
-	
-	method atacar(enemigo){
-		enemigo.recivirDano()
+
+	method atacar(enemigo) {
+		if (enemigo.status() == 1 && self.status() != 2) {
+			enemigo.recivirDano()
+		}
 	}
-	
-	method defender(){
-		
+
+	method defender() {
 	}
-	
-	
+
+	method recivirDano() {
+		if (vida <= 0) {
+			game.removeVisual(self)
+			self.status(0)
+		} else {
+			self.imagen(self.image().replace(".png", "Rojo.png"))
+			self.status(2)
+			game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
+			self.status(1)
+			vida -= 20
+		}
+	}
+
 }
 
-object mainCharacter inherits Character(position =  game.at(0,1), vida = 100) {
-	
+object mainCharacter inherits Character(position = game.at(0, 1), vida = 100) {
+
 	var hechizo
 	var oro
 	var property enemigo
-	
-	override method image(){
+
+	override method image() {
 		return "assets/knight2.png"
 	}
-	
+
 	method descansar() {
-		
 	}
-	
+
 	method huir() {
-		
 	}
-	
+
 	method magia() {
-		
 	}
+
 }
 
-class Enemy inherits Character{
-	
-	method visual(){
+class Enemy inherits Character {
+
+	method visual() {
 		game.addVisual(self)
 	}
-	
-	//el dano de -20 esta para las pruebas
-	method recivirDano(){	
-		if(vida <= 0) game.removeVisual(self) 
-		else { 	
-		 	const a = self.imagen()
-		 	self.imagen(self.cambio(self.imagen()))
-		 	game.schedule(1000,  {self.imagen(a)})
-		 	vida -= 20	}
+
+	// el dano de -20 esta para las pruebas
+	method estado() {
+		//if (self.status() == 0) spawn.generar()
 	}
-	method cambio(imag){
-		if(imag == "assets/skeleton.png") return "assets/skeletonRojo.png"
-		else if(imag == "assets/demon.png") return "assets/demonRojo.png"
-		else return "assets/goblinRojo.png"
+
+	override method recivirDano() {
+		if (vida <= 0) {
+			game.removeVisual(self)
+			self.status(0)
+			
+			nivel.spawnManager()
+		} else {
+			self.imagen(self.image().replace(".png", "Rojo.png"))
+			self.status(2)
+			game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
+			self.status(1)
+			vida -= 20
+			
+			self.atacar(mainCharacter)
+		}
 	}
-	
-	method estado(){
-		if(vida < 0) spawn.generar()
-	}
-	
 }
 
+object spawn {
 
+	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
-object spawn{
-	const bestias = ["assets/goblin.gif", "assets/skeleton.png", "assets/demon.png"]
-	method generar(){
-		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = bestias.anyOne())
+	method generar() {
+		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = bestias.anyOne(), nivel = null)
 		mainCharacter.enemigo(enemigo1)
 		enemigo1.visual()
 	}
+
 }
 
-object newSpanw {
-	const bestias = ["assets/goblin.gif", "assets/skeleton.png", "assets/demon.png"]
-	
-	method generar(wave) {
-		
+object newSpawn {
+
+	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
+
+	method generar(wave, _nivel) {
+		const enemigo = new Enemy(position = game.at(18, 1), vida = (50 * wave), stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = bestias.anyOne(), nivel = _nivel)
+		mainCharacter.enemigo(enemigo)
+		enemigo.visual() 
 	}
+
 }
 
 object menuBackground {
+
 	var property image = "assets/menu_background.png"
 	var property position = game.at(0, 0)
+
 }
+
 class MenuOpt {
+
 	var property image
 	var property position
-	var property selected = mainMenu.selected() == self	
+	var property selected = mainMenu.selected() == self
+
 }
+
 object start inherits MenuOpt {
-	override method image(){
-		if(mainMenu.selected() == self){
+
+	override method image() {
+		if (mainMenu.selected() == self) {
 			return "assets/start_selected.png"
 		} else return "assets/start.png"
-	} 
+	}
+
 	override method position() = game.at(24, 7)
-	
-	method action(){
+
+	method action() {
 		nivel1.iniciar()
 	}
+
 }
+
 object quit inherits MenuOpt {
-	override method image(){
-		if(mainMenu.selected() == self){
+
+	override method image() {
+		if (mainMenu.selected() == self) {
 			return "assets/quit_selected.png"
 		} else return "assets/quit.png"
-	} 
+	}
+
 	override method position() = game.at(24, 6)
-	
-	method action(){
+
+	method action() {
 		game.stop()
 	}
+
 }
+
