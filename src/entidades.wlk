@@ -1,4 +1,4 @@
-import wollok.game.* //comentario Fer
+import wollok.game.*
 import equipamento.*
 import niveles.*
 
@@ -6,15 +6,16 @@ class Character {
 
 	var vida
 	var stamina
-	var arma
-	var fuerza
 	var agilidad
+	var arma
+	var armadura
 	
 	// status list
 	// 0 = dead
 	// 1 = idle
 	// 2 = being attacked
 	var property status = 1
+	var defiende = false
 	var property imagen
 	var property position
 	var property nivel
@@ -22,32 +23,36 @@ class Character {
 	method image() {
 		return imagen
 	}
+	
+	method danioBase() = 5
+	method defensaBase() = 5
 
 	method atacar(enemigo) {
 		if (enemigo.status() == 1 && self.status() != 2) {
-			enemigo.recivirDano()
-		}
+			enemigo.recibirDano(self.danioBase()+arma.danio())
+		} 
 	}
 
-	method defender() {
-	}
+	method defender() { defiende = true }
 
-	method recivirDano() {
+	method recibirDano(danio) {
+		var danioRecibido = danio																		//\  Guarda daño en variable local 
+																										// | Si esta defendiendo reduce daño a la mitad
+		if (defiende) { danioRecibido/= 2 }		 														///
+		self.imagen(self.image().replace(".png", "Rojo.png"))
+		self.status(2)
+		game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
+		self.status(1)
+		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
-		} else {
-			self.imagen(self.image().replace(".png", "Rojo.png"))
-			self.status(2)
-			game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
-			self.status(1)
-			vida -= 20
 		}
 	}
 
 }
 
-object mainCharacter inherits Character(position = game.at(0, 1), vida = 100) {
+object mainCharacter inherits Character(position = game.at(0, 1), vida = 100, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?')) {
 
 	var hechizo
 	var oro
@@ -57,8 +62,12 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 100) {
 	override method image() {
 		return image
 	}
+	
+	override method danioBase() = 10
 
 	method equipUpgrade(_level){
+		arma.danio(arma.danio()+arma.danio()*2/3)											//\ Aumenta ataque y defensa
+		armadura.reduccionDanio(armadura.reduccionDanio()+armadura.reduccionDanio()*2/3)	/// en 2/3
 		if(_level == 2){
 			image = "assets/knight2.png"
 		}else{
@@ -87,21 +96,20 @@ class Enemy inherits Character {
 		//if (self.status() == 0) spawn.generar()
 	}
 
-	override method recivirDano() {
+	override method recibirDano(danio) {
+		var danioRecibido = danio																		//\  Guarda daño en variable local 
+																										// | Si esta defendiendo reduce daño a la mitad
+		if (defiende) { danioRecibido/= 2 }		 														///
+		self.imagen(self.image().replace(".png", "Rojo.png"))
+		self.status(2)
+		game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
+		self.status(1)
+		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.removeVisual(self)
-			self.status(0)
-			
+			self.status(0)			
 			nivel.spawnManager()
-		} else {
-			self.imagen(self.image().replace(".png", "Rojo.png"))
-			self.status(2)
-			game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
-			self.status(1)
-			vida -= 20
-			
-			self.atacar(mainCharacter)
-		}
+		} else {self.atacar(mainCharacter)}		
 	}
 }
 
@@ -110,7 +118,7 @@ object spawn {
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
 	method generar() {
-		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = bestias.anyOne(), nivel = null)
+		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), agilidad = 0, imagen = bestias.anyOne(), nivel = null)
 		mainCharacter.enemigo(enemigo1)
 		enemigo1.visual()
 	}
@@ -121,8 +129,8 @@ object newSpawn {
 
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
-	method generar(wave, _nivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = (50 * wave), stamina = 0, arma = 0, fuerza = 0, agilidad = 0, imagen = bestias.anyOne(), nivel = _nivel)
+	method generar(wave, _nivel, numNivel) {
+		const enemigo = new Enemy(position = game.at(18, 1), vida = (50 * wave), stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 0, imagen = bestias.anyOne(), nivel = _nivel)
 		mainCharacter.enemigo(enemigo)
 		enemigo.visual() 
 	}
