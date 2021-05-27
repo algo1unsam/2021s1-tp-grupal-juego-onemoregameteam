@@ -21,6 +21,7 @@ object nivel1 inherits Nivel{
 	override method spawnManager(){
 		if(cont > 0){
 			newSpawn.generar(1, self, 1)
+			
 			cont -= 1
 		}else{
 			pantallaUpgrade.iniciar()

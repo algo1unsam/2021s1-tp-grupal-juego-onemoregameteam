@@ -1,6 +1,7 @@
 import wollok.game.*
 import equipamento.*
 import niveles.*
+import movimiento.*
 
 class Character {
 
@@ -39,9 +40,9 @@ class Character {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
 																										// | Si esta defendiendo reduce daño a la mitad
 		if (defiende) { danioRecibido/= 2 }		 														///
-		self.imagen(self.image().replace(".png", "Rojo.png"))
+		cambioImagen.roja(self)
 		self.status(2)
-		game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
+		game.schedule(300, { cambioImagen.normal(self)})
 		self.status(1)
 		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
@@ -52,7 +53,7 @@ class Character {
 
 }
 
-object mainCharacter inherits Character(position = game.at(0, 1), vida = 100, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?')) {
+object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?')) {
 
 	var hechizo
 	var oro
@@ -73,6 +74,14 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 100, ar
 		}else{
 			image = "assets/knight3.png"
 		}
+	}
+	
+	override method atacar(enemigo1) {
+		if (enemigo.status() == 1 && self.status() != 2) {
+			accionConjDer.accion()
+			enemigo.recibirDano(self.danioBase()+arma.danio())
+			
+		} 
 	}
 	method descansar() {
 	}
@@ -100,17 +109,25 @@ class Enemy inherits Character {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
 																										// | Si esta defendiendo reduce daño a la mitad
 		if (defiende) { danioRecibido/= 2 }		 														///
-		self.imagen(self.image().replace(".png", "Rojo.png"))
+		game.schedule(900,{cambioImagen.roja(self)})	
 		self.status(2)
-		game.schedule(300, { self.imagen(self.image().replace("Rojo.png", ".png"))})
+		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
 		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
-			game.removeVisual(self)
-			self.status(0)			
-			nivel.spawnManager()
+			game.schedule(1000,{game.removeVisual(self)})
+			self.status(0)
+			game.schedule(2000,{nivel.spawnManager()})			
+			
 		} else {self.atacar(mainCharacter)}		
 	}
+}
+
+object cambioImagen{
+	
+	method roja(personaje){ personaje.imagen(personaje.image().replace(".png", "Rojo.png")) }
+	
+	method normal(personaje){ personaje.imagen(personaje.image().replace("Rojo.png", ".png"))}
 }
 
 object spawn {
