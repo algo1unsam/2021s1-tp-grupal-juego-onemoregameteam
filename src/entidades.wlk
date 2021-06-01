@@ -54,17 +54,11 @@ class Character {
 
 }
 
-object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?')) {
+object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png") {
 
 	var hechizo
 	var oro
-	var image = "assets/knight1.png"
 	var property enemigo
-	
-
-	override method image() {
-		return image
-	}
 	
 	override method danioBase() = 10
 
@@ -72,9 +66,13 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 		arma.danio(arma.danio()+arma.danio()*2/3)											//\ Aumenta ataque y defensa
 		armadura.reduccionDanio(armadura.reduccionDanio()+armadura.reduccionDanio()*2/3)	/// en 2/3
 		if(_level == 2){
-			image = "assets/knight2.png"
+			//image = "assets/knight2.png"
+			self.imagen("assets/knight2.png")
+			
 		}else{
-			image = "assets/knight3.png"
+			//image = "assets/knight3.png"
+			self.imagen(self.image().replace("assets/knight3.png"))
+			
 		}
 	}
 	
@@ -139,8 +137,10 @@ var property enemigo = mainCharacter
 			self.status(0)
 			game.schedule(2000,{nivel.spawnManager()})			
 			
-		} 
-		game.schedule(3200,{self.atacar(mainCharacter)})		
+		} else{
+			game.schedule(3200,{self.atacar(mainCharacter)})		
+			
+		}
 	}
 	
 	override method atacar(enemigo1) {
@@ -179,6 +179,8 @@ object newSpawn {
 	method generar(wave, _nivel, numNivel) {
 		const enemigo = new Enemy(position = game.at(18, 1), vida = (15 * wave), stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 0, imagen = bestias.anyOne(), nivel = _nivel)
 		mainCharacter.enemigo(enemigo)
+		//cambia entidad enemigo a mover
+		accionConjizq.charact(enemigo)
 		enemigo.visual() 
 	}
 
