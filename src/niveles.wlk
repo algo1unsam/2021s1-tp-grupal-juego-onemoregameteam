@@ -10,6 +10,7 @@ class Nivel {
 		game.addVisual(mainCharacter)
 		self.spawnManager()
 		config.nivel1()
+		game.showAttributes(mainCharacter)
 	}
 	method spawnManager() {}	
 }
