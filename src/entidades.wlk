@@ -138,7 +138,7 @@ var property enemigo = mainCharacter
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0..100.anyOne().between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0..100.anyOne().between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)

@@ -17,3 +17,13 @@ class LibroHechizo {
 	var property curacion
 	var property nombre
 }
+
+object dictEquipo {
+	const dictArmas = new Dictionary()
+	const dictArmaduras = new Dictionary()
+	const dictHechizos = new Dictionary()
+	
+	method init() {
+		dictArmas.put("Daga",0,5)
+	}
+}
