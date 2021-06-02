@@ -7,7 +7,7 @@ class Character {
 
 	var vida
 	var stamina
-	var agilidad		
+	var agilidad		//numero entre 0 y 100, representa porcentaje
 	var arma = 5
 	var armadura
 	
