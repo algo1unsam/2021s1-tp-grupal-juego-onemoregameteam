@@ -7,7 +7,7 @@ class Character {
 
 	var vida
 	var stamina
-	var agilidad
+	var agilidad		//porcentaje?
 	var arma = 5
 	var armadura
 	
@@ -16,7 +16,7 @@ class Character {
 	// 1 = idle
 	// 2 = being attacked
 	var property status = 1
-	var defiende = true
+	var property defiende = true
 	var property imagen
 	var property position
 	var property nivel
@@ -34,7 +34,7 @@ class Character {
 		} 
 	}
 
-	method defender() { defiende = true }
+	method defender() {}
 
 	method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
@@ -44,7 +44,7 @@ class Character {
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0..100.anyOne().between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido		
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -84,6 +84,13 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 		} 
 	}
 	
+	override method defender() {		
+		self.defiende(true)
+		enemigo.atacar(self)
+		self.defiende(false)
+	
+	}
+	
 	override method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
 																										// | Si esta defendiendo reduce daño a la mitad
@@ -92,7 +99,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 		self.status(2)
 		game.schedule(1500,{self.imagen(self.image().replace("Rojo.png", ".png"))})
 		self.status(1)
-		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0..100.anyOne().between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -131,7 +138,7 @@ var property enemigo = mainCharacter
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0..100.anyOne().between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()						//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)
