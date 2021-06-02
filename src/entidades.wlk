@@ -7,7 +7,7 @@ class Character {
 
 	var vida
 	var stamina
-	var agilidad		//porcentaje?
+	var agilidad		
 	var arma = 5
 	var armadura
 	
@@ -16,7 +16,7 @@ class Character {
 	// 1 = idle
 	// 2 = being attacked
 	var property status = 1
-	var property defiende = true
+	var property defiende = false
 	var property imagen
 	var property position
 	var property nivel
