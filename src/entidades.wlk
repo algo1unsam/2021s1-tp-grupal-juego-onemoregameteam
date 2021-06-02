@@ -8,7 +8,7 @@ class Character {
 	var vida
 	var stamina
 	var agilidad		//numero entre 0 y 100, representa porcentaje
-	var arma = 5
+	var arma
 	var armadura
 	
 	// status list
@@ -44,7 +44,7 @@ class Character {
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomToMax(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido		
+		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido		
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -54,7 +54,7 @@ class Character {
 
 }
 
-object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png") {
+object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, agilidad = 5, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png") {
 
 	var hechizo
 	var oro
@@ -99,7 +99,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 		self.status(2)
 		game.schedule(1500,{self.imagen(self.image().replace("Rojo.png", ".png"))})
 		self.status(1)
-		if (not (0.randomToMax(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -138,7 +138,7 @@ var property enemigo = mainCharacter
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomToMax(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)
@@ -172,7 +172,7 @@ object spawn {
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
 	method generar() {
-		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), agilidad = 0, imagen = bestias.anyOne(), nivel = null)
+		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = null)
 		mainCharacter.enemigo(enemigo1)
 		enemigo1.visual()
 	}
@@ -184,7 +184,7 @@ object newSpawn {
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
 	method generar(wave, _nivel, numNivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = (15 * wave), stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 0, imagen = bestias.anyOne(), nivel = _nivel)
+		const enemigo = new Enemy(position = game.at(18, 1), vida = (15 * wave), stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = _nivel)
 		mainCharacter.enemigo(enemigo)
 		//cambia entidad enemigo a mover
 		accionConjizq.charact(enemigo)
