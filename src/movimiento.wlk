@@ -74,6 +74,5 @@ class AccionConj{
 	method accion(){
 		self.caminar()
 		game.schedule(1500,{self.volver()})	
-		
 	}
 }

@@ -9,7 +9,5 @@ program juego {
 	game.width(30)
 	game.boardGround("assets/dungeon1.gif")
 	mainMenu.iniciar()
-		// game.showAttributes(knight) //Debug
-		// game.showAttributes(goblin)
 	game.start()
 }

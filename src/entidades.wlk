@@ -34,7 +34,7 @@ class Character {
 		} 
 	}
 
-	method defender() {}
+	method defender(){}
 
 	method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
@@ -71,7 +71,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 			
 		}else{
 			//image = "assets/knight3.png"
-			self.imagen(self.image().replace("assets/knight3.png"))
+			self.imagen("assets/knight3.png")
 			
 		}
 	}
@@ -80,6 +80,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjDer.accion()
 			enemigo1.recibirDano(self.danioBase()+arma.danio())
+			position = game.at(0, 1)
 			
 		} 
 	}
@@ -112,6 +113,9 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 	}
 
 	method magia() {
+	}
+	method mostrarStatus() {
+		game.say(self, "Vida = "+vida.toString())
 	}
 
 }
@@ -154,7 +158,7 @@ var property enemigo = mainCharacter
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjizq.accion()
 			enemigo1.recibirDano(self.danioBase()+arma.danio())
-			
+			position = game.at(18, 1)
 	} 
 }
 

@@ -9,7 +9,7 @@ class Nivel {
 		game.clear()
 		game.addVisual(mainCharacter)
 		self.spawnManager()
-		config.nivel1()
+		config.acciones()
 		game.showAttributes(mainCharacter)
 	}
 	method spawnManager() {}	
@@ -82,7 +82,7 @@ object pantallaUpgrade {
 object mainMenu {
 
 	var property selected
-	var backgroundMusic = game.sound("sounds/introOST.mp3")
+	const backgroundMusic = game.sound("sounds/introOST.mp3")
 
 	method iniciar() {
 		game.clear()
@@ -124,14 +124,16 @@ object config {
 		keyboard.enter().onPressDo({ mainMenu.action()})
 	}
 
-	method nivel1() {
+	method acciones() {
 		keyboard.a().onPressDo({ mainCharacter.atacar(mainCharacter.enemigo())})
 		keyboard.n().onPressDo({ mainCharacter.enemigo().estado()})
+		keyboard.s().onPressDo({ mainCharacter.defender()})
+		keyboard.e().onPressDo({ mainCharacter.mostrarStatus()})
 	}
 	
 	method next(){
 		keyboard.right().onPressDo({pantallaUpgrade.accion()})
 	}
-
+	
 }
 
