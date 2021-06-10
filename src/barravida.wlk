@@ -14,7 +14,7 @@ class BarraVida {
 	}
 
 	method image() {
-		return ("hp bar " + self.cuanta() + " of 50.png")
+		return ("assets vida/hp bar " + self.cuanta() + " of 50.png")
 		 
 	}
 }
@@ -40,7 +40,7 @@ object barraStaminaProta {
 
 
 	method image(){
-		return ("stamina " + self.cuanta() + " of 3.png")
+		return ("assets vida/stamina " + self.cuanta() + " of 3.png")
 		
 	}
 	
