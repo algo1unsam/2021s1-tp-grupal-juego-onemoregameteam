@@ -2,14 +2,16 @@ import wollok.game.*
 import equipamento.*
 import niveles.*
 import movimiento.*
+import barravida.*
 
 class Character {
 
 	var vida
-	var stamina
+	var stamina = 3
 	var agilidad		//numero entre 0 y 100, representa porcentaje
 	var arma
 	var armadura
+	var barName
 	
 	// status list
 	// 0 = dead
@@ -25,7 +27,10 @@ class Character {
 		return imagen
 	}
 	
+	method stamina() = stamina
+	method vida() = vida
 	method danioBase() = 5
+	
 	method defensaBase() = 5
 
 	method atacar(enemigo) {
@@ -54,13 +59,13 @@ class Character {
 
 }
 
-object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, agilidad = 5, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png") {
+object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agilidad = 5, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png",barName = barraVidaProta) {
 
 	var hechizo
 	var oro
 	var property enemigo
 	
-	override method danioBase() = 10
+	override method danioBase() = 45
 
 	method equipUpgrade(_level){
 		arma.danio(arma.danio()+arma.danio()*2/3)											//\ Aumenta ataque y defensa
@@ -79,6 +84,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 1000, a
 	override method atacar(enemigo1) {
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjDer.accion()
+			stamina-=1
 			enemigo1.recibirDano(self.danioBase()+arma.danio())
 			position = game.at(0, 1)
 			
@@ -144,9 +150,11 @@ var property enemigo = mainCharacter
 		self.status(1)
 		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
+			game.schedule(1000, { game.removeVisual(barraVidaE1)})
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)
-			game.schedule(2000,{nivel.spawnManager()})			
+			game.schedule(2000,{nivel.spawnManager()})	
+			if (nivel.cont() > 0) game.schedule(2000, { game.addVisual(barraVidaE1) })		
 			
 		} else{
 			game.schedule(3200,{self.atacar(mainCharacter)})		
@@ -176,7 +184,7 @@ object spawn {
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
 	method generar() {
-		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = null)
+		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = null,barName = barraVidaE1)
 		mainCharacter.enemigo(enemigo1)
 		enemigo1.visual()
 	}
@@ -188,10 +196,11 @@ object newSpawn {
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
 
 	method generar(wave, _nivel, numNivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = (15 * wave), stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = _nivel)
+		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = _nivel,barName = barraVidaE1)
 		mainCharacter.enemigo(enemigo)
 		//cambia entidad enemigo a mover
 		accionConjizq.charact(enemigo)
+		barraVidaE1.persona(enemigo)
 		enemigo.visual() 
 	}
 

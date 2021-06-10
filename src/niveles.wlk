@@ -2,13 +2,17 @@ import entidades.*
 import wollok.game.*
 import equipamento.*
 import mainMenu.*
+import barravida.*
 
 class Nivel {
 	
 	method iniciar() {
 		game.clear()
 		game.addVisual(mainCharacter)
+		game.addVisual(barraVidaProta)
+		game.addVisual(barraStaminaProta)
 		self.spawnManager()
+		game.addVisual(barraVidaE1)
 		config.acciones()
 		game.showAttributes(mainCharacter)
 	}
@@ -19,13 +23,15 @@ object nivel1 inherits Nivel{
 	const waveLenght = 4
 	var cont = waveLenght
 	
+	method cont() = cont
+	
 	override method spawnManager(){
 		if(cont > 0){
 			newSpawn.generar(1, self, 1)
 			
 			cont -= 1
 		}else{
-			pantallaUpgrade.iniciar()
+			game.schedule(2000, { pantallaUpgrade.iniciar()})
 		}
 	}
 }
@@ -34,13 +40,14 @@ object nivel2 inherits Nivel{
 	const waveLenght = 5
 	var cont = waveLenght
 	
+	method cont() = cont
 	override method spawnManager(){
 		if(cont > 0){
 			newSpawn.generar(2, self, 2)
 			cont -= 1
 		}else{
 			pantallaUpgrade.nivel(3)
-			pantallaUpgrade.iniciar()
+			game.schedule(2000, { pantallaUpgrade.iniciar()})
 		} 
 	}
 }
@@ -48,7 +55,7 @@ object nivel2 inherits Nivel{
 object nivel3 inherits Nivel{
 	const waveLenght = 6
 	var cont = waveLenght
-	
+	method cont() = cont
 	override method spawnManager(){
 		if(cont > 0){
 			newSpawn.generar(3, self, 3)
