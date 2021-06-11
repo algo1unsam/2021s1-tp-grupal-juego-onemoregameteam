@@ -86,6 +86,15 @@ object pantallaUpgrade {
 	}
 	
 }
+
+object gameEnd{
+	var property image = "assets/gameover.png"
+	var property position = game.at(0, 0)
+	method iniciar(){
+		game.clear()
+		game.addVisual(self)
+	}
+}
 object mainMenu {
 
 	var property selected
@@ -135,6 +144,7 @@ object config {
 		keyboard.a().onPressDo({ mainCharacter.atacar(mainCharacter.enemigo())})
 		keyboard.n().onPressDo({ mainCharacter.enemigo().estado()})
 		keyboard.s().onPressDo({ mainCharacter.defender()})
+		keyboard.c().onPressDo({ mainCharacter.curar()})
 		keyboard.e().onPressDo({ mainCharacter.mostrarStatus()})
 	}
 	

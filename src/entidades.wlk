@@ -84,7 +84,6 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	override method atacar(enemigo1) {
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjDer.accion()
-			stamina-=1
 			enemigo1.recibirDano(self.danioBase()+arma.danio())
 			position = game.at(0, 1)
 			
@@ -110,6 +109,8 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
+			gameEnd.iniciar()
+			game.schedule(2000, { game.stop() })
 		}
 	}
 	method descansar() {
@@ -118,7 +119,11 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	method huir() {
 	}
 
-	method magia() {
+	method curar() {
+		if(stamina > 0){
+			stamina-=1
+			vida += 5
+		}
 	}
 	method mostrarStatus() {
 		game.say(self, "Vida = "+vida.toString())
