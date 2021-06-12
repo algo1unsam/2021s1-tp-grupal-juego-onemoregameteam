@@ -128,6 +128,11 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	method mostrarStatus() {
 		game.say(self, "Vida = "+vida.toString())
 	}
+	
+	//Metodo que se utiliza al temrinar cada etapa. Subi la stamina(pociones) en 1
+	method staminaUp(){
+		stamina += 1
+	}
 
 }
 

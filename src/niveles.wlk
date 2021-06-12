@@ -20,7 +20,7 @@ class Nivel {
 }
 
 object nivel1 inherits Nivel{
-	const waveLenght = 4
+	const waveLenght = 2
 	var cont = waveLenght
 	
 	method cont() = cont
@@ -37,7 +37,7 @@ object nivel1 inherits Nivel{
 }
 
 object nivel2 inherits Nivel{
-	const waveLenght = 5
+	const waveLenght = 2
 	var cont = waveLenght
 	
 	method cont() = cont
@@ -53,7 +53,7 @@ object nivel2 inherits Nivel{
 }
 
 object nivel3 inherits Nivel{
-	const waveLenght = 6
+	const waveLenght = 2
 	var cont = waveLenght
 	method cont() = cont
 	override method spawnManager(){
@@ -91,6 +91,11 @@ object pantallaUpgrade {
 		game.addVisual(upgradeBackGround)
 		//Hay que configurar los botones, por ahora el siguente es la felcha derecha
 		//Y ASI CON BOTON PARA CONTINUAR Y BOTON PARA MENU PRINCIPAL
+		
+		//Le da stamina(pociones) al player
+		if(mainCharacter.stamina() < 3){
+			mainCharacter.staminaUp()
+		}
 		config.next()
 	}
 	
@@ -113,6 +118,11 @@ object bossScreen{
 	method iniciar(){
 		game.clear()
 		game.addVisual(self)
+		
+		//Le da stamina(pociones) al player
+		if(mainCharacter.stamina() < 3){
+			mainCharacter.staminaUp()
+		}
 		game.schedule(1200, {bossLevel.iniciar()})
 		
 	}
