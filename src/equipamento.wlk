@@ -1,4 +1,4 @@
-import wollok.game.* //comentario Fer
+import wollok.game.*
 import niveles.*
 
 class Arma {

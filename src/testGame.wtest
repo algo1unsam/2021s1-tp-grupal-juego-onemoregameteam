@@ -14,21 +14,21 @@ describe " Test del Nivel 1" {
 		const vida = mainCharacter.vida()
 		mainCharacter.recibirDano(40)
 		const vidaActual = mainCharacter.vida()
-		assert.that(vida > vidaActual)
+		assert.that(vida >= vidaActual)
 	}
 
 	test "Enemigo recibe daño" {
 		const vida = mainCharacter.enemigo().vida()
 		mainCharacter.enemigo().recibirDano(40)
 		const vidaActual = mainCharacter.enemigo().vida()
-		assert.that(vida > vidaActual)
+		assert.that(vida >= vidaActual)
 	}
 
 	test "Maincharacter ataca a enemigo y recibe el daño" {
 		const vida = mainCharacter.enemigo().vida()
 		mainCharacter.atacar(mainCharacter.enemigo())
 		const vidaActual = mainCharacter.enemigo().vida()
-		assert.that(vida > vidaActual)
+		assert.that(vida >= vidaActual)
 	}
 
 	test " MainCharacter se cura 15 y reduce stamina " {
@@ -36,11 +36,17 @@ describe " Test del Nivel 1" {
 		assert.that(mainCharacter.stamina() == 3 )
 		const vida = mainCharacter.vida()
 		mainCharacter.curar()
-		assert.equals(vida + 15 ,mainCharacter.vida() )
+		assert.that(vida <= mainCharacter.vida())
 		assert.that(mainCharacter.stamina() == 2 )
-		
-				
+						
 	}
-
+	test " cambio imagen rojo y normal "{
+		assert.equals("assets/knight1.png",mainCharacter.image())
+		cambioImagen.roja(mainCharacter)
+		assert.equals("assets/knight1Rojo.png",mainCharacter.image())
+		cambioImagen.normal(mainCharacter)
+		assert.equals("assets/knight1.png",mainCharacter.image())
+		
+		}
 }
 
