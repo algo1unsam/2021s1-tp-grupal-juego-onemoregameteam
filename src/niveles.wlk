@@ -31,7 +31,7 @@ object nivel1 inherits Nivel{
 			
 			cont -= 1
 		}else{
-			game.schedule(2000, { pantallaUpgrade.iniciar()})
+			game.schedule(1000, { pantallaUpgrade.iniciar()})
 		}
 	}
 }
@@ -47,7 +47,7 @@ object nivel2 inherits Nivel{
 			cont -= 1
 		}else{
 			pantallaUpgrade.nivel(3)
-			game.schedule(2000, { pantallaUpgrade.iniciar()})
+			game.schedule(1000, { pantallaUpgrade.iniciar()})
 		} 
 	}
 }
@@ -60,9 +60,29 @@ object nivel3 inherits Nivel{
 		if(cont > 0){
 			newSpawn.generar(3, self, 3)
 			cont -= 1
+		}else{
+			game.schedule(1000, { bossScreen.iniciar()})
 		}
 	}
 }
+
+object bossLevel inherits Nivel{
+	const waveLenght = 1
+	var cont = waveLenght
+	
+	method cont() = cont
+	
+	override method spawnManager(){
+		if(cont > 0){
+			bossSpawn.generar(1, self, 1)
+			
+			cont -= 1
+		}else{
+			game.schedule(1000, { game.stop()})
+		}
+	}
+}
+
 object pantallaUpgrade {
 	var property nivel = 2
 	method iniciar() {
@@ -87,12 +107,24 @@ object pantallaUpgrade {
 	
 }
 
+object bossScreen{
+	var property image = "assets/bossScreen.png"
+	var property position = game.at(0, 0)
+	method iniciar(){
+		game.clear()
+		game.addVisual(self)
+		game.schedule(1200, {bossLevel.iniciar()})
+		
+	}
+}
+
 object gameEnd{
 	var property image = "assets/gameover.png"
 	var property position = game.at(0, 0)
 	method iniciar(){
 		game.clear()
 		game.addVisual(self)
+		
 	}
 }
 object mainMenu {

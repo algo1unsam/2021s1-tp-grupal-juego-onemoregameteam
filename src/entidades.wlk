@@ -10,7 +10,7 @@ class Character {
 	var stamina = 3
 	var agilidad		//numero entre 0 y 100, representa porcentaje
 	var arma
-	var armadura
+	var property armadura
 	var barName
 	
 	// status list
@@ -84,7 +84,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	override method atacar(enemigo1) {
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjDer.accion()
-			enemigo1.recibirDano(self.danioBase()+arma.danio())
+			enemigo1.recibirDano(self.danioBase()+arma.danio()-enemigo1.armadura().reduccionDanio())
 			position = game.at(0, 1)
 			
 		} 
@@ -109,7 +109,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
-			gameEnd.iniciar()
+			game.schedule(1000, {gameEnd.iniciar()})
 			game.schedule(2000, { game.stop() })
 		}
 	}
@@ -120,9 +120,9 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	}
 
 	method curar() {
-		if(stamina > 0){
+		if(stamina > 0 and vida < 35){
 			stamina-=1
-			vida += 5
+			vida += 15
 		}
 	}
 	method mostrarStatus() {
@@ -162,7 +162,7 @@ var property enemigo = mainCharacter
 			if (nivel.cont() > 0) game.schedule(2000, { game.addVisual(barraVidaE1) })		
 			
 		} else{
-			game.schedule(3200,{self.atacar(mainCharacter)})		
+			game.schedule(2200,{self.atacar(mainCharacter)})		
 			
 		}
 	}
@@ -170,12 +170,13 @@ var property enemigo = mainCharacter
 	override method atacar(enemigo1) {
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjizq.accion()
-			enemigo1.recibirDano(self.danioBase()+arma.danio())
+			enemigo1.recibirDano(self.danioBase()+arma.danio()-enemigo1.armadura().reduccionDanio())
 			position = game.at(18, 1)
 	} 
 }
 
 }
+
 
 object cambioImagen{
 	
@@ -209,6 +210,17 @@ object newSpawn {
 		enemigo.visual() 
 	}
 
+}
+
+object bossSpawn{
+	method generar(wave, _nivel, numNivel) {
+		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=20, nombre='?'), armadura = new Armadura(reduccionDanio=50, nombre='?'), agilidad = 15, imagen = "assets/boss.png", nivel = _nivel,barName = barraVidaE1)
+		mainCharacter.enemigo(enemigo)
+		//cambia entidad enemigo a mover
+		accionConjizq.charact(enemigo)
+		barraVidaE1.persona(enemigo)
+		enemigo.visual() 
+	}
 }
 
 object upgradeBackGround{
