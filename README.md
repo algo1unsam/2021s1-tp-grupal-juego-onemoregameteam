@@ -18,10 +18,10 @@ Una vez comenzado el juego, cuando sea el turno del jugador tendra las siguentes
 - Para defender presione [S]
 - Para curarse presione [C]
 
-Cualquier opción gasta un turno
+Las opciones Atacar y Defender gastan un turno.
 
-Termianda cada etapa se encontrara con una pantalla de mejoras.
-Para avanzar presiones la flecha derecha [→]
+Termianda cada etapa se encontrara con una pantalla de mejoras,
+Que avanzara automaticamente.
 
 Luego de las mejoras volveras a la mazmorra para seguir luchando.
 Una vez terminadas las 3 primeras etapas te enfrentaras al jefe. Es un enemigo muy dificil.
