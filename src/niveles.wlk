@@ -20,7 +20,7 @@ class Nivel {
 }
 
 object nivel1 inherits Nivel{
-	const waveLenght = 2
+	const waveLenght = 3
 	var cont = waveLenght
 	
 	method cont() = cont
@@ -37,7 +37,7 @@ object nivel1 inherits Nivel{
 }
 
 object nivel2 inherits Nivel{
-	const waveLenght = 2
+	const waveLenght = 4
 	var cont = waveLenght
 	
 	method cont() = cont
@@ -53,7 +53,7 @@ object nivel2 inherits Nivel{
 }
 
 object nivel3 inherits Nivel{
-	const waveLenght = 2
+	const waveLenght = 5
 	var cont = waveLenght
 	method cont() = cont
 	override method spawnManager(){
@@ -78,7 +78,8 @@ object bossLevel inherits Nivel{
 			
 			cont -= 1
 		}else{
-			game.schedule(1000, { game.stop()})
+			game.schedule(1000, { winScreen.iniciar()})
+			game.schedule(1500, { game.stop()})
 		}
 	}
 }
@@ -89,14 +90,12 @@ object pantallaUpgrade {
 		upgradeBackGround.nextlvl(nivel)
 		game.clear()
 		game.addVisual(upgradeBackGround)
-		//Hay que configurar los botones, por ahora el siguente es la felcha derecha
-		//Y ASI CON BOTON PARA CONTINUAR Y BOTON PARA MENU PRINCIPAL
 		
 		//Le da stamina(pociones) al player
 		if(mainCharacter.stamina() < 3){
 			mainCharacter.staminaUp()
 		}
-		config.next()
+		game.schedule(1800, { self.accion()})
 	}
 	
 	method accion(){
@@ -134,7 +133,17 @@ object gameEnd{
 	method iniciar(){
 		game.clear()
 		game.addVisual(self)
-		
+		game.schedule(2300, { game.stop() })
+	}
+}
+
+object winScreen{
+	var property image = "assets/gamecomplete.png"
+	var property position = game.at(0, 0)
+	method iniciar(){
+		game.clear()
+		game.addVisual(self)
+		game.schedule(3400, { game.stop() })
 	}
 }
 object mainMenu {
@@ -184,15 +193,8 @@ object config {
 
 	method acciones() {
 		keyboard.a().onPressDo({ mainCharacter.atacar(mainCharacter.enemigo())})
-		keyboard.n().onPressDo({ mainCharacter.enemigo().estado()})
 		keyboard.s().onPressDo({ mainCharacter.defender()})
 		keyboard.c().onPressDo({ mainCharacter.curar()})
-		keyboard.e().onPressDo({ mainCharacter.mostrarStatus()})
 	}
-	
-	method next(){
-		keyboard.right().onPressDo({pantallaUpgrade.accion()})
-	}
-	
 }
 

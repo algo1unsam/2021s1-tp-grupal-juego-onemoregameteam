@@ -61,8 +61,6 @@ class Character {
 
 object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agilidad = 5, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png",barName = barraVidaProta) {
 
-	var hechizo
-	var oro
 	var property enemigo
 	
 	override method danioBase() = 45
@@ -109,24 +107,15 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
-			game.schedule(1000, {gameEnd.iniciar()})
-			game.schedule(2000, { game.stop() })
+			game.schedule(1500, {gameEnd.iniciar()})
 		}
 	}
-	method descansar() {
-	}
-
-	method huir() {
-	}
-
+	
 	method curar() {
 		if(stamina > 0 and vida < 35){
 			stamina-=1
 			vida += 15
 		}
-	}
-	method mostrarStatus() {
-		game.say(self, "Vida = "+vida.toString())
 	}
 	
 	//Metodo que se utiliza al temrinar cada etapa. Subi la stamina(pociones) en 1
@@ -143,11 +132,6 @@ var property enemigo = mainCharacter
 
 	method visual() {
 		game.addVisual(self)
-	}
-
-	// el dano de -20 esta para las pruebas
-	method estado() {
-		//if (self.status() == 0) spawn.generar()
 	}
 
 	override method recibirDano(danio) {
@@ -219,7 +203,7 @@ object newSpawn {
 
 object bossSpawn{
 	method generar(wave, _nivel, numNivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=20, nombre='?'), armadura = new Armadura(reduccionDanio=50, nombre='?'), agilidad = 15, imagen = "assets/boss.png", nivel = _nivel,barName = barraVidaE1)
+		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=16, nombre='?'), armadura = new Armadura(reduccionDanio=50, nombre='?'), agilidad = 15, imagen = "assets/boss.png", nivel = _nivel,barName = barraVidaE1)
 		mainCharacter.enemigo(enemigo)
 		//cambia entidad enemigo a mover
 		accionConjizq.charact(enemigo)
