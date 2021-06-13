@@ -48,5 +48,33 @@ describe " Test del Nivel 1" {
 		assert.equals("assets/knight1.png",mainCharacter.image())
 		
 		}
+	test " cambio imagen gris y normal "{
+		assert.equals("assets/knight1.png",mainCharacter.image())
+		cambioImagen.gris(mainCharacter)
+		assert.equals("assets/knight1Gris.png",mainCharacter.image())
+		cambioImagen.normal(mainCharacter)
+		assert.equals("assets/knight1.png",mainCharacter.image())
+		
+		}
+	test "no cambia imagen gris si defiende "{
+		assert.equals("assets/knight1.png",mainCharacter.image())
+		cambioImagen.gris(mainCharacter)
+		assert.equals("assets/knight1Gris.png",mainCharacter.image())
+		mainCharacter.defiende(true)
+		cambioImagen.normal(mainCharacter)
+		assert.equals("assets/knight1Gris.png",mainCharacter.image())
+		
+		}
+		test "cambio imagen rojo y gris "{
+		assert.equals("assets/knight1.png",mainCharacter.image())
+		mainCharacter.defiende(true)
+		cambioImagen.gris(mainCharacter)
+		assert.equals("assets/knight1Gris.png",mainCharacter.image())
+		cambioImagen.roja(mainCharacter)
+		assert.equals("assets/knight1Rojo.png",mainCharacter.image())
+		cambioImagen.normal(mainCharacter)
+		assert.equals("assets/knight1Gris.png",mainCharacter.image())
+		
+		}
 }
 

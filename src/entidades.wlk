@@ -49,7 +49,7 @@ class Character {
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido		
+		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())	//> Daño entre -5 ataque recibido y ataque recibido		
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -83,27 +83,27 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 		if (enemigo1.status() == 1 && self.status() != 2) {
 			accionConjDer.accion()
 			enemigo1.recibirDano(self.danioBase()+arma.danio()-enemigo1.armadura().reduccionDanio())
-			position = game.at(0, 1)
-			
+			position = game.at(0, 1)			
 		} 
 	}
 	
 	override method defender() {		
 		self.defiende(true)
+		game.schedule(1,{cambioImagen.gris(self)})
 		enemigo.atacar(self)
 		self.defiende(false)
-	
+		game.schedule(2000,{cambioImagen.normal(self)})
 	}
 	
 	override method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
 																										// | Si esta defendiendo reduce daño a la mitad
 		if (defiende) { danioRecibido/= 2 }		 														///
-		game.schedule(900,{self.imagen(self.image().replace(".png", "Rojo.png"))})
+		game.schedule(900,{cambioImagen.roja(self)})
 		self.status(2)
-		game.schedule(1500,{self.imagen(self.image().replace("Rojo.png", ".png"))})
+		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -142,17 +142,15 @@ var property enemigo = mainCharacter
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= new Range(start = danioRecibido-5, end = danioRecibido).anyOne()	//> Daño entre -5 ataque recibido y ataque recibido
+		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())	//> Daño entre -5 ataque recibido y ataque recibido
 		if (vida <= 0) {
 			game.schedule(1000, { game.removeVisual(barraVidaE1)})
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)
 			game.schedule(2000,{nivel.spawnManager()})	
-			if (nivel.cont() > 0) game.schedule(2000, { game.addVisual(barraVidaE1) })		
-			
+			if (nivel.cont() > 0) game.schedule(2000, { game.addVisual(barraVidaE1) })					
 		} else{
-			game.schedule(2200,{self.atacar(mainCharacter)})		
-			
+			game.schedule(2200,{self.atacar(mainCharacter)})			
 		}
 	}
 	
@@ -161,18 +159,29 @@ var property enemigo = mainCharacter
 			accionConjizq.accion()
 			enemigo1.recibirDano(self.danioBase()+arma.danio()-enemigo1.armadura().reduccionDanio())
 			position = game.at(18, 1)
-	} 
-}
+		} 
+	}
 
 }
 
 
 object cambioImagen{
 	
-	method roja(personaje){ personaje.imagen(personaje.image().replace(".png", "Rojo.png")) }
+	method roja(personaje){ 
+		if (personaje.imagen().endsWith("Gris.png")) personaje.imagen(personaje.image().replace("Gris.png", "Rojo.png"))
+		else personaje.imagen(personaje.image().replace(".png", "Rojo.png"))		
+	}
 	
-	method normal(personaje){ personaje.imagen(personaje.image().replace("Rojo.png", ".png"))}
+	method gris(personaje){ personaje.imagen(personaje.image().replace(".png", "Gris.png")) }
+	
+	method normal(personaje){
+		if (personaje.imagen().endsWith("Rojo.png")){
+			if (personaje.defiende()) personaje.imagen(personaje.image().replace("Rojo.png", "Gris.png"))
+			else personaje.imagen(personaje.image().replace("Rojo.png", ".png"))
+		} else if (personaje.imagen().endsWith("Gris.png")) { if (not personaje.defiende()) personaje.imagen(personaje.image().replace("Gris.png", ".png")) } 
+	}		
 }
+
 
 object spawn {
 
