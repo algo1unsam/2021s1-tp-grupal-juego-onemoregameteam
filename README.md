@@ -20,7 +20,7 @@ Una vez comenzado el juego, cuando sea el turno del jugador tendra las siguentes
 
 Las opciones Atacar y Defender gastan un turno.
 
-Termianda cada etapa se encontrara con una pantalla de mejoras,
+Terminada cada etapa se encontrara con una pantalla de mejoras,
 Que avanzara automaticamente.
 
 Luego de las mejoras volveras a la mazmorra para seguir luchando.
