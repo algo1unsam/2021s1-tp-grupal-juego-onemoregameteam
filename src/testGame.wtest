@@ -76,5 +76,10 @@ describe " Test del Nivel 1" {
 		assert.equals("assets/knight1Gris.png",mainCharacter.image())
 		
 		}
+		test "ataque negativo = 0" {
+			mainCharacter.recibirDano(-10)
+			assert.equals(50,mainCharacter.vida())
+		}
 }
+	
 
