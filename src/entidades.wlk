@@ -103,12 +103,12 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())	//> Daño entre -5 ataque recibido y ataque recibido
-		if (vida <= 0) {
+		game.schedule(900,{if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())})	//> Daño entre -5 ataque recibido y ataque recibido
+		game.schedule(900,{if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
 			game.schedule(1500, {gameEnd.iniciar()})
-		}
+		}})
 	}
 	
 	method curar() {
@@ -142,8 +142,8 @@ var property enemigo = mainCharacter
 		self.status(2)
 		game.schedule(1500,{cambioImagen.normal(self)})
 		self.status(1)
-		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())	//> Daño entre -5 ataque recibido y ataque recibido
-		if (vida <= 0) {
+		game.schedule(900,{if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())})	//> Daño entre -5 ataque recibido y ataque recibido
+		game.schedule(900,{if (vida <= 0) {
 			game.schedule(1000, { game.removeVisual(barraVidaE1)})
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)
@@ -152,7 +152,7 @@ var property enemigo = mainCharacter
 		} else{
 			game.schedule(2200,{self.atacar(mainCharacter)})			
 		}
-	}
+	})}
 	
 	override method atacar(enemigo1) {
 		if (enemigo1.status() == 1 && self.status() != 2) {
