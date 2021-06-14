@@ -212,7 +212,7 @@ object newSpawn {
 
 object bossSpawn{
 	method generar(wave, _nivel, numNivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=16, nombre='?'), armadura = new Armadura(reduccionDanio=50, nombre='?'), agilidad = 15, imagen = "assets/boss.png", nivel = _nivel,barName = barraVidaE1)
+		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=20, nombre='?'), armadura = new Armadura(reduccionDanio=50, nombre='?'), agilidad = 15, imagen = "assets/boss.png", nivel = _nivel,barName = barraVidaE1)
 		mainCharacter.enemigo(enemigo)
 		//cambia entidad enemigo a mover
 		accionConjizq.charact(enemigo)
