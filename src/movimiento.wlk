@@ -9,11 +9,11 @@ import entidades.*
  object accionConjizq inherits AccionConj(charact =mainCharacter.enemigo(), enemigo = mainCharacter){
 	
 	override method caminar(){
-		modoWalkingL.accion(charact)
+		modoWalkingL.accion(charact, enemigo)
 	}
 	
 	override method volver(){
-		modoWalkingR.accion(charact)
+		modoWalkingR.accion(charact, enemigo)
 	}
 }
  
@@ -25,8 +25,8 @@ class Modo {
 	var property time
 	var property final
 	
-    method accionPersonaje(charact){
-		self.moverPersonaje(charact)
+    method accionPersonaje(charact, enemigo){
+		self.moverPersonaje(charact, enemigo)
 				
         if (self.time() == pasos) {
         	game.removeTickEvent(descripcion)   	
@@ -35,18 +35,19 @@ class Modo {
         
     }
 
-	method accion(charact) {
-		game.onTick(velocidad, descripcion, {=> self.accionPersonaje(charact)})
+	method accion(charact, enemigo) {
+		game.onTick(velocidad, descripcion, {=> self.accionPersonaje(charact, enemigo)})
 		
 	}
 	
-	method moverPersonaje(charact){		
+	method moverPersonaje(charact, enemigo){
 	}
 	
 }
 object modoWalkingR inherits Modo(descripcion = "Walking", velocidad = 40, pasos = 14, time=0,final=0) {
 
-    override method moverPersonaje(charact){
+    override method moverPersonaje(charact, enemigo){
+    	super(charact, enemigo)
     	time+=1
         charact.position(charact.position().right(1))
        
@@ -54,7 +55,8 @@ object modoWalkingR inherits Modo(descripcion = "Walking", velocidad = 40, pasos
 }
 object modoWalkingL inherits Modo(descripcion = "Walking", velocidad = 40, pasos = 0, time=14,final=14) {
 
-    override method moverPersonaje(charact){
+    override method moverPersonaje(charact, enemigo){
+    	super(charact, enemigo)
 		time -=1
         charact.position(charact.position().left(1))
     }
@@ -66,13 +68,21 @@ class AccionConj{
 	var property enemigo
 	
 	method caminar(){
-		modoWalkingR.accion(charact)
+		modoWalkingR.accion(charact, enemigo)
+		
 	}
 	method volver(){
-		modoWalkingL.accion(charact)
+		modoWalkingL.accion(charact, enemigo)
 	}
 	method accion(){
+		self.statusSwitch(2)
 		self.caminar()
 		game.schedule(1500,{self.volver()})	
+		game.schedule(1500,{self.statusSwitch(1)})
+	}
+	
+	method statusSwitch(case){
+		charact.status(case)
+		enemigo.status(case)
 	}
 }

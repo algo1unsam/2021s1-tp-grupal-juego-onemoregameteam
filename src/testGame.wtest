@@ -7,7 +7,8 @@ import niveles.*
 describe " Test del Nivel 1" {
 
 	fixture {
-		nivel1.spawnManager()
+		nivel1.iniciar(1)
+		//nivel1.spawnManager(1)
 	}
 
 	test "Maincharacter recibe daño" {
@@ -36,9 +37,8 @@ describe " Test del Nivel 1" {
 		assert.that(mainCharacter.stamina() == 3 )
 		const vida = mainCharacter.vida()
 		mainCharacter.curar()
-		assert.that(vida <= mainCharacter.vida())
 		assert.that(mainCharacter.stamina() == 2 )
-						
+		assert.that(vida <= mainCharacter.vida())				
 	}
 	test " cambio imagen rojo y normal "{
 		assert.equals("assets/knight1.png",mainCharacter.image())

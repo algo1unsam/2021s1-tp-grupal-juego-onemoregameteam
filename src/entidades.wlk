@@ -16,7 +16,7 @@ class Character {
 	// status list
 	// 0 = dead
 	// 1 = idle
-	// 2 = being attacked
+	// 2 = !idle
 	var property status = 1
 	var property defiende = false
 	var property imagen
@@ -34,29 +34,20 @@ class Character {
 	method defensaBase() = 5
 
 	method atacar(enemigo) {
-		if (enemigo.status() == 1 && self.status() != 2) {
-			enemigo.recibirDano(self.danioBase()+arma.danio())
-		} 
 	}
 
 	method defender(){}
 
 	method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
-																										// | Si esta defendiendo reduce daño a la mitad
-		if (defiende) { danioRecibido/= 2 }		 														///
-		game.schedule(900,{cambioImagen.roja(self)})
-		self.status(2)
-		game.schedule(1500,{cambioImagen.normal(self)})
-		self.status(1)
-		if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())	//> Daño entre -5 ataque recibido y ataque recibido		
-		if (vida <= 0) {
-			game.removeVisual(self)
-			self.status(0)
-		}
-	}
+		//if(status == 1){																				// | Si esta defendiendo reduce daño a la mitad
+			if (defiende) { danioRecibido/= 2 }		 														
+			game.schedule(900,{cambioImagen.roja(self)})
+			game.schedule(1500,{cambioImagen.normal(self)})
+			game.schedule(900,{if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())})	//> Daño entre -5 ataque recibido y ataque recibido
+		//}	else {null}																					
 	
-
+	}
 }
 
 object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agilidad = 5, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), imagen="assets/knight1.png",barName = barraVidaProta) {
@@ -80,7 +71,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	}
 	
 	override method atacar(enemigo1) {
-		if (enemigo1.status() == 1 && self.status() != 2) {
+		if (enemigo1.status() == 1 && self.status() == 1) {
 			accionConjDer.accion()
 			enemigo1.recibirDano(self.danioBase()+arma.danio()-enemigo1.armadura().reduccionDanio())
 			position = game.at(0, 1)			
@@ -98,12 +89,7 @@ object mainCharacter inherits Character(position = game.at(0, 1), vida = 50, agi
 	override method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
 																										// | Si esta defendiendo reduce daño a la mitad
-		if (defiende) { danioRecibido/= 2 }		 														///
-		game.schedule(900,{cambioImagen.roja(self)})
-		self.status(2)
-		game.schedule(1500,{cambioImagen.normal(self)})
-		self.status(1)
-		game.schedule(900,{if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())})	//> Daño entre -5 ataque recibido y ataque recibido
+		super(danio)
 		game.schedule(900,{if (vida <= 0) {
 			game.removeVisual(self)
 			self.status(0)
@@ -137,17 +123,12 @@ var property enemigo = mainCharacter
 	override method recibirDano(danio) {
 		var danioRecibido = danio																		//\  Guarda daño en variable local 
 																										// | Si esta defendiendo reduce daño a la mitad
-		if (defiende) { danioRecibido/= 2 }		 														///
-		game.schedule(900,{cambioImagen.roja(self)})	
-		self.status(2)
-		game.schedule(1500,{cambioImagen.normal(self)})
-		self.status(1)
-		game.schedule(900,{if (not (0.randomUpTo(100).between(0,agilidad))) vida -= 0.max(new Range(start = danioRecibido-5, end = danioRecibido).anyOne())})	//> Daño entre -5 ataque recibido y ataque recibido
+		super(danio)
 		game.schedule(900,{if (vida <= 0) {
 			game.schedule(1000, { game.removeVisual(barraVidaE1)})
 			game.schedule(1000,{game.removeVisual(self)})
 			self.status(0)
-			game.schedule(2000,{nivel.spawnManager()})	
+			game.schedule(2000,{nivel.spawnManager(nivel.lvl())})	
 			if (nivel.cont() > 0) game.schedule(2000, { game.addVisual(barraVidaE1) })					
 		} else{
 			game.schedule(2200,{self.atacar(mainCharacter)})			
@@ -155,7 +136,7 @@ var property enemigo = mainCharacter
 	})}
 	
 	override method atacar(enemigo1) {
-		if (enemigo1.status() == 1 && self.status() != 2) {
+		if (enemigo1.status() == 1 && self.status() == 1) {
 			accionConjizq.accion()
 			enemigo1.recibirDano(self.danioBase()+arma.danio()-enemigo1.armadura().reduccionDanio())
 			position = game.at(18, 1)
@@ -182,25 +163,17 @@ object cambioImagen{
 	}		
 }
 
-
 object spawn {
 
 	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
-
-	method generar() {
-		const enemigo1 = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=5, nombre='?'), armadura = new Armadura(reduccionDanio=5, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = null,barName = barraVidaE1)
-		mainCharacter.enemigo(enemigo1)
-		enemigo1.visual()
-	}
-
-}
-
-object newSpawn {
-
-	const bestias = [ "assets/goblin.png", "assets/skeleton.png", "assets/demon.png" ]
-
-	method generar(wave, _nivel, numNivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = _nivel,barName = barraVidaE1)
+	const boss = ["assets/boss.png"]
+	
+	method generar(wave, _nivel, numNivel, special) {
+		if(special){
+			const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=20 * wave, nombre='?'), armadura = new Armadura(reduccionDanio=50 * wave, nombre='?'), agilidad = 15 * wave, imagen = boss.anyOne(), nivel = _nivel,barName = barraVidaE1)
+		} else {
+			const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=(5*numNivel) + wave, nombre='?'), armadura = new Armadura(reduccionDanio=(5*numNivel) + wave, nombre='?'), agilidad = 5, imagen = bestias.anyOne(), nivel = _nivel,barName = barraVidaE1)
+		}
 		mainCharacter.enemigo(enemigo)
 		//cambia entidad enemigo a mover
 		accionConjizq.charact(enemigo)
@@ -208,17 +181,6 @@ object newSpawn {
 		enemigo.visual() 
 	}
 
-}
-
-object bossSpawn{
-	method generar(wave, _nivel, numNivel) {
-		const enemigo = new Enemy(position = game.at(18, 1), vida = 50, stamina = 0, arma = new Arma(danio=20, nombre='?'), armadura = new Armadura(reduccionDanio=50, nombre='?'), agilidad = 15, imagen = "assets/boss.png", nivel = _nivel,barName = barraVidaE1)
-		mainCharacter.enemigo(enemigo)
-		//cambia entidad enemigo a mover
-		accionConjizq.charact(enemigo)
-		barraVidaE1.persona(enemigo)
-		enemigo.visual() 
-	}
 }
 
 object upgradeBackGround{
@@ -258,7 +220,7 @@ object start inherits MenuOpt {
 	override method position() = game.at(24, 7)
 
 	method action() {
-		nivel1.iniciar()
+		nivel1.iniciar(1)
 	}
 
 }

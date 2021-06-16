@@ -5,76 +5,63 @@ import mainMenu.*
 import barravida.*
 
 class Nivel {
+	var property lvl
+	var waveLenght
+	var property cont
 	
-	method iniciar() {
+	method iniciar(nivel) {
+		self.setup()
+		lvl = nivel
+		waveLenght = lvl + 2
+		cont = waveLenght
+		self.spawnManager(lvl)
+	}
+	
+	method setup(){
 		game.clear()
 		game.addVisual(mainCharacter)
 		game.addVisual(barraVidaProta)
 		game.addVisual(barraStaminaProta)
-		self.spawnManager()
 		game.addVisual(barraVidaE1)
 		config.acciones()
 		game.showAttributes(mainCharacter)
 	}
-	method spawnManager() {}	
+	
+	method spawnManager(nivel) {
+		if(cont > 0){
+			spawn.generar(nivel, self, nivel, false)
+			
+			cont -= 1
+		}else if(nivel % 3 != 0) {
+			
+			game.schedule(1000, { pantallaUpgrade.iniciar(nivel)})
+		} else {
+			game.schedule(1000, { bossScreen.iniciar()})
+		}
+	}	
 }
 
 object nivel1 inherits Nivel{
-	const waveLenght = 3
-	var cont = waveLenght
-	
-	method cont() = cont
-	
-	override method spawnManager(){
-		if(cont > 0){
-			newSpawn.generar(1, self, 1)
-			
-			cont -= 1
-		}else{
-			game.schedule(1000, { pantallaUpgrade.iniciar()})
-		}
-	}
 }
 
 object nivel2 inherits Nivel{
-	const waveLenght = 4
-	var cont = waveLenght
-	
-	method cont() = cont
-	override method spawnManager(){
-		if(cont > 0){
-			newSpawn.generar(2, self, 2)
-			cont -= 1
-		}else{
-			pantallaUpgrade.nivel(3)
-			game.schedule(1000, { pantallaUpgrade.iniciar()})
-		} 
-	}
 }
 
 object nivel3 inherits Nivel{
-	const waveLenght = 5
-	var cont = waveLenght
-	method cont() = cont
-	override method spawnManager(){
-		if(cont > 0){
-			newSpawn.generar(3, self, 3)
-			cont -= 1
-		}else{
-			game.schedule(1000, { bossScreen.iniciar()})
-		}
-	}
 }
 
 object bossLevel inherits Nivel{
-	const waveLenght = 1
-	var cont = waveLenght
+	override method iniciar(nivel){
+		self.setup()
+		lvl = nivel
+		waveLenght = lvl
+		cont = waveLenght
+		self.spawnManager(lvl)
+	}
 	
-	method cont() = cont
-	
-	override method spawnManager(){
+	override method spawnManager(nivel){
 		if(cont > 0){
-			bossSpawn.generar(1, self, 1)
+			spawn.generar(nivel, self, nivel, true)
 			
 			cont -= 1
 		}else{
@@ -85,8 +72,9 @@ object bossLevel inherits Nivel{
 }
 
 object pantallaUpgrade {
-	var property nivel = 2
-	method iniciar() {
+	var property nivel
+	method iniciar(_nivel) {
+		nivel = _nivel + 1
 		upgradeBackGround.nextlvl(nivel)
 		game.clear()
 		game.addVisual(upgradeBackGround)
@@ -100,10 +88,10 @@ object pantallaUpgrade {
 	
 	method accion(){
 		if(nivel == 2){
-			nivel2.iniciar()
+			nivel2.iniciar(nivel)
 			mainCharacter.equipUpgrade(2)
-		}else{
-			nivel3.iniciar()
+		}else if(nivel == 3){
+			nivel3.iniciar(nivel)
 			mainCharacter.equipUpgrade(3)
 		}
 		
@@ -122,7 +110,7 @@ object bossScreen{
 		if(mainCharacter.stamina() < 3){
 			mainCharacter.staminaUp()
 		}
-		game.schedule(1200, {bossLevel.iniciar()})
+		game.schedule(1200, {bossLevel.iniciar(1)})
 		
 	}
 }
